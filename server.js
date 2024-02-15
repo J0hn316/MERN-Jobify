@@ -3,7 +3,13 @@ import express from 'express';
 import morgan from 'morgan';
 import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
+
+// routers
 import jobRouter from './routers/jobRouter.js';
+import authRouter from './routers/authRouter.js';
+
+// middleware
+import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 
 dotenv.config();
 
@@ -19,12 +25,8 @@ app.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-app.post('/', (req, res) => {
-  console.log(req);
-  res.json({ message: 'data received', data: req.body });
-});
-
 app.use('/api/v1/jobs', jobRouter);
+app.use('/api/v1/auth', authRouter);
 
 // This route needs to be at the end of all routes
 app.use('*', (req, res) => {
@@ -32,10 +34,7 @@ app.use('*', (req, res) => {
 });
 
 // This route needs to be the very last to check errors
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(500).json({ msg: 'something went wrong' });
-});
+app.use(errorHandlerMiddleware);
 
 try {
   await mongoose.connect(process.env.MONGO_URL);
