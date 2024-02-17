@@ -3,6 +3,7 @@ import express from 'express';
 import morgan from 'morgan';
 import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
 
 // routers
 import jobRouter from './routers/jobRouter.js';
@@ -10,13 +11,16 @@ import authRouter from './routers/authRouter.js';
 
 // middleware
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
+import { authenticateUser } from './middleware/authMiddleware.js';
 
 dotenv.config();
 
 const port = process.env.PORT || 5100;
 const app = express();
 
+app.use(cookieParser());
 app.use(express.json());
+
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
@@ -25,7 +29,7 @@ app.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-app.use('/api/v1/jobs', jobRouter);
+app.use('/api/v1/jobs', authenticateUser, jobRouter);
 app.use('/api/v1/auth', authRouter);
 
 // This route needs to be at the end of all routes

@@ -2990,7 +2990,8 @@ const login = async (req, res) => {
 Refactor
 
 ```js
-const isValidUser = user && (await comparePassword(password, user.password));
+const isValidUser =
+  user && (await comparePassword(req.body.password, user.password));
 if (!isValidUser) throw new UnauthenticatedError('invalid credentials');
 ```
 
