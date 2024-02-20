@@ -5,7 +5,7 @@ import customFetch from '../utils/customFetch.js';
 import { toast } from 'react-toastify';
 
 export const action = async ({ request }) => {
-  // the redirect import only works with  action functions line 14
+  // the redirect import only works with  action functions
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   try {
