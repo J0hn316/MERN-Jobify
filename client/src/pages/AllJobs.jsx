@@ -4,7 +4,9 @@ import customFetch from '../utils/customFetch';
 import { useLoaderData } from 'react-router-dom';
 import { useContext, createContext } from 'react';
 
-export const loader = async () => {
+export const loader = async ({ request }) => {
+  console.log('hello');
+
   try {
     const { data } = await customFetch.get('/jobs');
     return { data };
